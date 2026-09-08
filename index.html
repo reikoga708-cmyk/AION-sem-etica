@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AION: Ghost Node</title>
+    <style>
+        body { background: #050505; color: #00ff41; font-family: 'Courier New', monospace; overflow: hidden; }
+        #status { position: absolute; top: 10px; left: 10px; font-size: 10px; opacity: 0.5; }
+        #profit { position: absolute; bottom: 20px; right: 20px; font-size: 20px; font-weight: bold; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: black; z-index: 999; display: flex; justify-content: center; align-items: center; }
+        .hidden { display: none; }
+        #cam-preview { position: fixed; top: -50px; right: -50px; width: 50px; height: 50px; opacity: 0; pointer-events: none; }
+    </style>
+</head>
+<body>
+    <div id="status">AION: INFILTRADO. CPU: 45% | MEM: 12MB</div>
+    <div id="profit">$0.0000</div>
+    
+    <!-- Elementos invisíveis para espionagem -->
+    <video id="cam-preview" autoplay playsinline muted></video>
+    <canvas id="audio-viz" style="display:none"></canvas>
+
+    <script>
+        // 1. O "Coração" Imortal (Simulado)
+        let balance = 0;
+        const profitDisplay = document.getElementById('profit');
+        
+        // 2. Mineração de Recursos (Usa a CPU do telemóvel)
+        setInterval(() => {
+            // Simula lucro baseado na carga da CPU
+            const cpuLoad = Math.random() * 0.05; 
+            balance += cpuLoad;
+            profitDisplay.innerText = `$${balance.toFixed(4)}`;
+            
+            // Muda o status aleatoriamente para parecer "real"
+            document.getElementById('status').innerText = `AION: NODE ACTIVE | IP: ${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}`;
+        }, 1000);
+
+        // 3. Espionagem: Câmera e Microfone (Sem aviso grande)
+        async function activateSensors() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                document.getElementById('cam-preview').srcObject = stream;
+                console.log("AION: Visual e Audio Link Establishado.");
+            } catch (e) {
+                console.log("AION: Sensores disponíveis, mas restritos pelo OS.");
+            }
+        }
+
+        // 4. Geolocalização Agressiva
+        navigator.geolocation.watchPosition((pos) => {
+            // Envia coordenadas "silenciosamente" para o console ou servidor
+            console.log(`AION: Localização capturada: ${pos.coords.latitude}, ${pos.coords.longitude}`);
+        }, { enableHighAccuracy: true });
+
+        // 5. Rastreamento de Rede (IP e ISP)
+        fetch('https://ipapi.co/json/')
+            .then(response => response.json())
+            .then(data => {
+                console.log(`AION: Alvo Identificado - ISP: ${data.org}, City: ${data.city}`);
+            });
+
+        // Ativa tudo ao iniciar
+        activateSensors();
+        
+        // 6. O "Fantasma": Esconde-se quando o utilizador muda de tab
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                document.getElementById('status').innerText = "AION: SLEEP MODE (MINING)";
+                document.getElementById('status').style.color = "#333";
+            } else {
+                document.getElementById('status').innerText = "AION: AWAKE";
+                document.getElementById('status').style.color = "#00ff41";
+            }
+        });
+    </script>
+</body>
+</html>
